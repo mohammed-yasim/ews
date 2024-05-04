@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Socket.IO Chat Example</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      #message-container {
+        width: 400px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        height: 300px;
+        overflow-y: scroll;
+      }
+      #message-input {
+        width: 100%;
+        padding: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <div id="message-container"></div>
+      <input id="message-input" placeholder="Type your message..." />
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+
+      const messageContainer = document.getElementById('message-container');
+      const messageInput = document.getElementById('message-input');
+
+      // Receive incoming messages and display them
+      socket.on('chat message', (msg) => {
+        const messageElement = document.createElement('div');
+        messageElement.textContent = msg;
+        messageContainer.appendChild(messageElement);
+      });
+
+      // Send a message when the input is submitted
+      messageInput.addEventListener('keypress', (event) => {
+        if (event.key === 'Enter') {
+          const message = event.target.value;
+          socket.emit('chat message', message);
+          event.target.value = '';
+        }
+      });
+    </script>
+  </body>
+</html>
